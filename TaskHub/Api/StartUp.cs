@@ -2,6 +2,7 @@ using Api.UseCases.Users;
 using Api.UseCases.Users.Interfaces;
 using Dal;
 using Logic;
+using DI;
 using Microsoft.OpenApi.Models;
 using Api.Middleware;
 
@@ -37,7 +38,13 @@ public sealed class Startup
         services.AddControllers();
         services.AddDal();
         services.AddLogic();
-        
+        services.AddSingleton<Singleton1, Singleton1>();
+        services.AddSingleton<Singleton2, Singleton2>();
+        services.AddScoped<Scoped1, Scoped1>();
+        services.AddScoped<Scoped2, Scoped2>();
+        services.AddTransient<Transient1, Transient1>();
+        services.AddTransient<Transient2, Transient2>();
+
         services.AddScoped<IManageUserUseCase, ManageUserUseCase>();
         
         services.AddCors(options =>
