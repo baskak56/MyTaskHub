@@ -19,27 +19,27 @@ public sealed class Program
                 webBuilder.UseStartup<Startup>();
             })
             .Build();
-        var serviceProvider = host.Services;
-        using (var scope = serviceProvider.CreateScope())
-        {
-            var scopeProvider = scope.ServiceProvider;
-            scopeProvider.ResolveAndCompare<Singleton1>();
-            scopeProvider.ResolveAndCompare<Singleton2>();
-            scopeProvider.ResolveAndCompare<Scoped1>();
-            scopeProvider.ResolveAndCompare<Scoped2>();
-            scopeProvider.ResolveAndCompare<Transient1>();
-            scopeProvider.ResolveAndCompare<Transient2>();
-        }
-        using (var scope = serviceProvider.CreateScope())
-        {
-            var scopeProvider = scope.ServiceProvider;
-            scopeProvider.ResolveAndCompare<Singleton1>();
-            scopeProvider.ResolveAndCompare<Singleton2>();
-            scopeProvider.ResolveAndCompare<Scoped1>();
-            scopeProvider.ResolveAndCompare<Scoped2>();
-            scopeProvider.ResolveAndCompare<Transient1>();
-            scopeProvider.ResolveAndCompare<Transient2>();
-        }
+        //var serviceProvider = host.Services;
+        //using (var scope = serviceProvider.CreateScope())
+        //{
+        //    var scopeProvider = scope.ServiceProvider;
+        //    scopeProvider.ResolveAndCompare<Singleton1>();
+        //    scopeProvider.ResolveAndCompare<Singleton2>();
+        //    scopeProvider.ResolveAndCompare<Scoped1>();
+        //    scopeProvider.ResolveAndCompare<Scoped2>();
+        //    scopeProvider.ResolveAndCompare<Transient1>();
+        //    scopeProvider.ResolveAndCompare<Transient2>();
+        //}
+        //using (var scope = serviceProvider.CreateScope())
+        //{
+        //    var scopeProvider = scope.ServiceProvider;
+        //    scopeProvider.ResolveAndCompare<Singleton1>();
+        //    scopeProvider.ResolveAndCompare<Singleton2>();
+        //    scopeProvider.ResolveAndCompare<Scoped1>();
+        //    scopeProvider.ResolveAndCompare<Scoped2>();
+        //    scopeProvider.ResolveAndCompare<Transient1>();
+        //    scopeProvider.ResolveAndCompare<Transient2>();
+        //}
         host.Run();
 
     }

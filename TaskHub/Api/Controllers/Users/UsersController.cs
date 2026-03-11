@@ -2,6 +2,7 @@ using Api.Controllers.Users.Request;
 using Api.Controllers.Users.Response;
 using Api.UseCases.Users.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using Api.Atributes;
 
 namespace Api.Controllers.Users;
 
@@ -10,6 +11,8 @@ namespace Api.Controllers.Users;
 /// </summary>
 [ApiController]
 [Route("users")]
+[ResponseTimeHeader]
+[StudentInfoHeaders]
 public sealed class UsersController : ControllerBase
 {
     /// <summary>
@@ -28,6 +31,7 @@ public sealed class UsersController : ControllerBase
     /// <param name="request">Данные для создания пользователя</param>
     /// <param name="cancellationToken">Токен отмены</param>
     /// <returns>Созданный пользователь</returns>
+    [ValidateUserRequest]
     [HttpPost]
     public async Task<ActionResult<UserResponse>> CreateUserAsync(
         [FromBody] CreateUserRequest? request,
@@ -75,6 +79,7 @@ public sealed class UsersController : ControllerBase
     /// <param name="request">Данные для установки имени</param>
     /// <param name="cancellationToken">Токен отмены</param>
     /// <returns>204 при успехе или 400 при неверном запросе</returns>
+    [ValidateUserRequest]
     [HttpPut("{id:guid}/name")]
     public async Task<IActionResult> SetUserNameAsync(
         [FromRoute] Guid id,
