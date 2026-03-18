@@ -5,6 +5,14 @@ using Logic;
 using DI;
 using Microsoft.OpenApi.Models;
 using Api.Middleware;
+using Dal.Context;
+using Dal.Repositories;
+using Dal.Repositories.Interfaces;
+using Logic.Tasks.Services;
+using Logic.Tasks.Services.Interfaces;
+using Api.UseCases.Tasks;
+using Api.UseCases.Tasks.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace Api;
 
@@ -46,7 +54,13 @@ public sealed class Startup
         services.AddTransient<Transient2, Transient2>();
 
         services.AddScoped<IManageUserUseCase, ManageUserUseCase>();
-        
+        services.AddDbContext<TaskDbContext>(options =>
+            options.UseNpgsql(Configuration.GetConnectionString("Postgres")));
+
+        services.AddScoped<ITaskRepository, TaskRepository>();
+        services.AddScoped<ITaskService, TaskService>();
+        services.AddScoped<IManageTaskUseCase, ManageTaskUseCase>();
+
         services.AddCors(options =>
         {
             options.AddDefaultPolicy(builder =>
@@ -60,7 +74,6 @@ public sealed class Startup
         });
 
         services.AddEndpointsApiExplorer();
-
         services.AddSwaggerGen(options =>
         {
             options.SwaggerDoc("v1", new OpenApiInfo
