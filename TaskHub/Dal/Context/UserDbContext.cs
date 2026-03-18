@@ -27,12 +27,16 @@ public sealed class UserDbContext : DbContext
 
             entity.HasKey(x => x.Id);
 
+            // Исправляем имена колонок на те, что реально есть в БД
+            entity.Property(x => x.Id)
+                .HasColumnName("Id");
+
             entity.Property(x => x.Name)
-                .HasColumnName("name")
+                .HasColumnName("Name")
                 .HasMaxLength(200);
 
             entity.Property(x => x.LastActivityUtc)
-                .HasColumnName("last_activity_utc")
+                .HasColumnName("LastActivityUtc")
                 .IsRequired();
         });
 

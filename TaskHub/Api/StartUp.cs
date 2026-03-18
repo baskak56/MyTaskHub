@@ -1,10 +1,18 @@
 using Api.UseCases.Users;
 using Api.UseCases.Users.Interfaces;
+using Api.UseCases.Tasks;
+using Api.UseCases.Tasks.Interfaces;
 using Dal;
 using Logic;
 using DI;
 using Microsoft.OpenApi.Models;
 using Api.Middleware;
+using Dal.Context;
+using Dal.Repositories;
+using Dal.Repositories.Interfaces;
+using Logic.Tasks.Services;
+using Logic.Tasks.Services.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace Api;
 
@@ -45,8 +53,22 @@ public sealed class Startup
         services.AddTransient<Transient1, Transient1>();
         services.AddTransient<Transient2, Transient2>();
 
+        // 👇 ДОБАВЛЯЕМ РЕГИСТРАЦИЮ БАЗЫ ДАННЫХ
+        services.AddDbContext<TaskDbContext>(options =>
+            options.UseNpgsql(Configuration.GetConnectionString("Postgres")));
+
+        // 👇 ДОБАВЛЯЕМ РЕГИСТРАЦИЮ РЕПОЗИТОРИЯ
+        services.AddScoped<ITaskRepository, TaskRepository>();
+
+        // 👇 ДОБАВЛЯЕМ РЕГИСТРАЦИЮ СЕРВИСА
+        services.AddScoped<ITaskService, TaskService>();
+
+        // UseCases для пользователей
         services.AddScoped<IManageUserUseCase, ManageUserUseCase>();
-        
+
+        // UseCases для задач
+        services.AddScoped<IManageTaskUseCase, ManageTaskUseCase>();
+
         services.AddCors(options =>
         {
             options.AddDefaultPolicy(builder =>
