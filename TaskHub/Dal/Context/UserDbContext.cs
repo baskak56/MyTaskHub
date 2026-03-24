@@ -32,11 +32,11 @@ public sealed class UserDbContext : DbContext
                 .HasColumnName("Id");
 
             entity.Property(x => x.Name)
-                .HasColumnName("Name")
+                .HasColumnName("name")
                 .HasMaxLength(200);
 
             entity.Property(x => x.LastActivityUtc)
-                .HasColumnName("LastActivityUtc")
+                .HasColumnName("last_activity_utc")
                 .IsRequired();
         });
 

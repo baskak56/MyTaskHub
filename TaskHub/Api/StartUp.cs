@@ -1,3 +1,4 @@
+
 using Api.UseCases.Users;
 using Api.UseCases.Users.Interfaces;
 using Api.UseCases.Tasks;
@@ -13,6 +14,7 @@ using Dal.Repositories.Interfaces;
 using Logic.Tasks.Services;
 using Logic.Tasks.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using Api.filter;
 
 namespace Api;
 
@@ -43,7 +45,10 @@ public sealed class Startup
     /// <param name="services">Коллекция сервисов</param>
     public void ConfigureServices(IServiceCollection services)
     {
-        services.AddControllers();
+        services.AddControllers(options =>
+        {
+            options.ModelBinderProviders.Insert(0, new FromRouteTaskIdAttribute());
+        });
         services.AddDal();
         services.AddLogic();
         services.AddSingleton<Singleton1, Singleton1>();
@@ -52,22 +57,13 @@ public sealed class Startup
         services.AddScoped<Scoped2, Scoped2>();
         services.AddTransient<Transient1, Transient1>();
         services.AddTransient<Transient2, Transient2>();
-
-        // 👇 ДОБАВЛЯЕМ РЕГИСТРАЦИЮ БАЗЫ ДАННЫХ
         services.AddDbContext<TaskDbContext>(options =>
             options.UseNpgsql(Configuration.GetConnectionString("Postgres")));
-
-        // 👇 ДОБАВЛЯЕМ РЕГИСТРАЦИЮ РЕПОЗИТОРИЯ
         services.AddScoped<ITaskRepository, TaskRepository>();
-
-        // 👇 ДОБАВЛЯЕМ РЕГИСТРАЦИЮ СЕРВИСА
         services.AddScoped<ITaskService, TaskService>();
-
-        // UseCases для пользователей
         services.AddScoped<IManageUserUseCase, ManageUserUseCase>();
-
-        // UseCases для задач
         services.AddScoped<IManageTaskUseCase, ManageTaskUseCase>();
+        services.AddScoped<RequestLoggingFilter>();
 
         services.AddCors(options =>
         {
