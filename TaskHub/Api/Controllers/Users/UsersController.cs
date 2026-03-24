@@ -55,8 +55,8 @@ public sealed class UsersController : ControllerBase
     /// <param name="id">Идентификатор пользователя</param>
     /// <param name="cancellationToken">Токен отмены</param>
     /// <returns>Пользователь или 404, если пользователь не найден</returns>
-    [HttpGet("{id:guid}")]
-    public async Task<ActionResult<UserResponse>> GetUserByIdAsync([FromRoute] Guid id, CancellationToken cancellationToken)
+    [HttpGet("{id}")]
+    public async Task<ActionResult<UserResponse>> GetUserByIdAsync([FromRouteTaskId] Guid id, CancellationToken cancellationToken)
     {
         var userResponse = await _userUseCase.GetUserByIdAsync(id, cancellationToken);
         

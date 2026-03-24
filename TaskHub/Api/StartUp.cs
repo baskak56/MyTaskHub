@@ -1,5 +1,8 @@
+
 using Api.UseCases.Users;
 using Api.UseCases.Users.Interfaces;
+using Api.UseCases.Tasks;
+using Api.UseCases.Tasks.Interfaces;
 using Dal;
 using Logic;
 using DI;
@@ -10,8 +13,6 @@ using Dal.Repositories;
 using Dal.Repositories.Interfaces;
 using Logic.Tasks.Services;
 using Logic.Tasks.Services.Interfaces;
-using Api.UseCases.Tasks;
-using Api.UseCases.Tasks.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
 namespace Api;
@@ -43,7 +44,10 @@ public sealed class Startup
     /// <param name="services">Коллекция сервисов</param>
     public void ConfigureServices(IServiceCollection services)
     {
-        services.AddControllers();
+        services.AddControllers(options =>
+        {
+            options.ModelBinderProviders.Insert(0, new FromRouteTaskIdAttribute());
+        });
         services.AddDal();
         services.AddLogic();
         services.AddSingleton<Singleton1, Singleton1>();
@@ -52,13 +56,11 @@ public sealed class Startup
         services.AddScoped<Scoped2, Scoped2>();
         services.AddTransient<Transient1, Transient1>();
         services.AddTransient<Transient2, Transient2>();
-
-        services.AddScoped<IManageUserUseCase, ManageUserUseCase>();
         services.AddDbContext<TaskDbContext>(options =>
             options.UseNpgsql(Configuration.GetConnectionString("Postgres")));
-
         services.AddScoped<ITaskRepository, TaskRepository>();
         services.AddScoped<ITaskService, TaskService>();
+        services.AddScoped<IManageUserUseCase, ManageUserUseCase>();
         services.AddScoped<IManageTaskUseCase, ManageTaskUseCase>();
 
         services.AddCors(options =>
@@ -74,6 +76,7 @@ public sealed class Startup
         });
 
         services.AddEndpointsApiExplorer();
+
         services.AddSwaggerGen(options =>
         {
             options.SwaggerDoc("v1", new OpenApiInfo
