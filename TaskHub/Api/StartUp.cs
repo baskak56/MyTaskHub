@@ -14,6 +14,7 @@ using Dal.Repositories.Interfaces;
 using Logic.Tasks.Services;
 using Logic.Tasks.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using Api.filter;
 
 namespace Api;
 
@@ -62,6 +63,7 @@ public sealed class Startup
         services.AddScoped<ITaskService, TaskService>();
         services.AddScoped<IManageUserUseCase, ManageUserUseCase>();
         services.AddScoped<IManageTaskUseCase, ManageTaskUseCase>();
+        services.AddScoped<RequestLoggingFilter>();
 
         services.AddCors(options =>
         {

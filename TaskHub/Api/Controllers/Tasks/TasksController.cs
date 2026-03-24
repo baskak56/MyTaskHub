@@ -2,9 +2,11 @@ using Api.Controllers.Tasks.Request;
 using Api.Controllers.Tasks.Response;
 using Api.UseCases.Tasks.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using Api.filter;
 
 namespace Api.Controllers.Tasks;
-
+[ServiceFilter(typeof(RequestLoggingFilter))]
+[StudentInfoHeadersFilter]
 [ApiController]
 [Route("tasks")]
 public sealed class TasksController : ControllerBase
@@ -17,6 +19,7 @@ public sealed class TasksController : ControllerBase
     }
 
     [HttpPost]
+    [ValidateCreateTaskRequestFilter]
     public async Task<ActionResult<TaskResponse>> CreateTaskAsync(
         [FromBody] CreateTaskRequest? request,
         CancellationToken cancellationToken)
@@ -44,7 +47,7 @@ public sealed class TasksController : ControllerBase
 
         return Ok(taskResponse);
     }
-
+    [ValidateSetTaskTitleRequestFilter]
     [HttpPut("{id:guid}/title")]
     public async Task<IActionResult> SetTaskTitleAsync(
         [FromRoute] Guid id,
